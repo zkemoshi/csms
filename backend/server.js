@@ -1,5 +1,6 @@
 import http from 'http';
 import express from 'express';
+import path from 'path';
 import 'dotenv/config';
 import connectDB from './config/database.js';
 import { initializeWSS } from './websocket/ocpp_server.js';
@@ -14,7 +15,6 @@ import sessionRoutes from './routes/sessions.js';
 
 // Importing middleware
 import { notFound, errorHandler } from './middleware/errorHandler.js';
-
 
 // --- Initialize ---
 const app = express();
@@ -46,7 +46,7 @@ app.use(errorHandler);
 // Pass the HTTP server to the WebSocket initializer
 initializeWSS(server);
 
-// --- Basic Express Route (for health check) ---
+// --- Production Static Files ---
 if (['production', 'staging'].includes(process.env.NODE_ENV)) {
     const __dirname = path.resolve();
     app.use(express.static(path.join(__dirname, '/frontend/dist')));
@@ -54,14 +54,14 @@ if (['production', 'staging'].includes(process.env.NODE_ENV)) {
     app.get('*', (req, res) =>
       res.sendFile(path.resolve(__dirname, 'frontend', 'dist', 'index.html'))
     );
-  } else {
+} else {
     app.get('/', (req, res) => {
       res.send('API is running....');
     });
-  }
+}
 
 // --- Start Listening ---
-server.listen(PORT, () => {
-    console.log(`HTTP Server is running on http://localhost:${PORT}`);
+server.listen(PORT, '0.0.0.0', () => {
+    console.log(`HTTP Server is running on http://0.0.0.0:${PORT}`);
     console.log(`OCPP WebSocket Server is listening on the same port.`);
 });

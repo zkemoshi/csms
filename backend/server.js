@@ -31,7 +31,7 @@ app.use(cookieParser());
 await connectDB();
 
 // --- Setup HTTP Routes ---
-app.get('/', (req, res) => res.send('CSMS Server is running.'));
+// app.get('/', (req, res) => res.send('CSMS Server is running.'));
 
 // API Routes
 app.use('/api/tokens', tokenRoutes);
@@ -46,16 +46,14 @@ initializeWSS(server);
 // --- Production Static Files (must be after API routes) ---
 if (['production', 'staging'].includes(process.env.NODE_ENV)) {
   const __dirname = path.resolve();
-  const distDir = path.join(__dirname, 'frontend', 'dist');
+  app.use(express.static(path.join(__dirname, '/frontend/dist')));
 
-  app.use(express.static(distDir));
-
-  // Optional: silence favicon 404s
-  app.get('/favicon.ico', (req, res) => res.sendStatus(204));
-
-  // ✅ Correct catch-all for SPA (use '*' or actual RegExp)
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(distDir, 'index.html'));
+  app.get('*', (req, res) =>
+    res.sendFile(path.resolve(__dirname, 'frontend', 'dist', 'index.html'))
+  );
+} else {
+  app.get('/', (req, res) => {
+    res.send('API is running....');
   });
 }
 

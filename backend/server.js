@@ -45,16 +45,18 @@ app.use('/api/sessions', sessionRoutes);
 initializeWSS(server);
 
 // --- Production Static Files (must be after API routes) ---
+
 if (['production', 'staging'].includes(process.env.NODE_ENV)) {
-    const __dirname = path.resolve();
-    
-    // Serve static files from the React app build directory
-    app.use(express.static(path.join(__dirname, 'frontend', 'dist')));
-    
-    // Handle React routing, return all requests to React app
-    app.get('*', (req, res) => {
-        res.sendFile(path.join(__dirname, 'frontend', 'dist', 'index.html'));
-    });
+  const __dirname = path.resolve();
+  app.use(express.static(path.join(__dirname, '/frontend/dist')));
+
+  app.get('*', (req, res) =>
+    res.sendFile(path.resolve(__dirname, 'frontend', 'dist', 'index.html'))
+  );
+} else {
+  app.get('/', (req, res) => {
+    res.send('API is running....');
+  });
 }
 
 // Error handling middleware (must be last)

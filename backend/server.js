@@ -47,6 +47,7 @@ initializeWSS(server);
 // --- Production Static Files (must be after API routes) ---
 
 if (['production', 'staging'].includes(process.env.NODE_ENV)) {
+  console.log('Production mode');
   const __dirname = path.resolve();
   app.use(express.static(path.join(__dirname, '/frontend/dist')));
 

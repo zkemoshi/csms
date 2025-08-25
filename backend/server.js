@@ -46,17 +46,19 @@ initializeWSS(server);
 
 // --- Production Static Files (must be after API routes) ---
 
-if (['production', 'staging'].includes(process.env.NODE_ENV)) {
-  console.log('Production mode');
+// Serve static files for production
+if (process.env.NODE_ENV === "production") {
+  console.log('ProductionMode')
   const __dirname = path.resolve();
-  app.use(express.static(path.join(__dirname, '/frontend/dist')));
+  app.use(express.static(path.join(__dirname, "/frontend/dist")));
 
-  app.get('*', (req, res) =>
-    res.sendFile(path.resolve(__dirname, 'frontend', 'dist', 'index.html'))
+  app.get("*", (req, res) =>
+    res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"))
   );
 } else {
-  app.get('/', (req, res) => {
-    res.send('API is running....');
+  console.log('devmode')
+  app.get("/", (req, res) => {
+    res.send("API is running....");
   });
 }
 
@@ -65,7 +67,7 @@ app.use(notFound);
 app.use(errorHandler);
 
 // --- Start Listening ---
-server.listen(PORT, '0.0.0.0', () => {
-    console.log(`HTTP Server is running on http://0.0.0.0:${PORT}`);
+server.listen(PORT, () => {
+    console.log(`HTTP Server is running on port:${PORT}`);
     console.log(`OCPP WebSocket Server is listening on the same port.`);
 });

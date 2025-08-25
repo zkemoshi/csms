@@ -4,12 +4,14 @@ import { protect, admin } from '../middleware/auth.js';
 
 const router = Router();
 
-// Protected routes
+// Protected routes - ORDER MATTERS! More specific routes first
 router.get('/', protect, ctrl.getAllTransactions);
 router.get('/stats', protect, ctrl.getTransactionStats);
 router.get('/active', protect, ctrl.getActiveTransactions);
 router.get('/station/:stationId', protect, ctrl.getTransactionsByStation);
 router.get('/transaction/:transactionId', protect, ctrl.getTransactionByTransactionId);
+
+// Generic routes - must come AFTER specific routes
 router.get('/:id', protect, ctrl.getTransactionById);
 
 router.post('/', protect, ctrl.createTransaction);

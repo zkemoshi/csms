@@ -1,10 +1,11 @@
 import http from 'http';
 import express from 'express';
-import path from 'path';
 import 'dotenv/config';
 import connectDB from './config/database.js';
 import { initializeWSS } from './websocket/ocpp_server.js';
 import cookieParser from 'cookie-parser';
+import path from 'path';
+
 
 // Importing routes
 import tokenRoutes from './routes/token.js';
@@ -45,27 +46,18 @@ app.use('/api/sessions', sessionRoutes);
 initializeWSS(server);
 
 // --- Production Static Files (must be after API routes) ---
-
-// Serve static files for production
-if (process.env.NODE_ENV === "production") {
-  console.log('ProductionMode')
+if (['production', 'staging'].includes(process.env.NODE_ENV)) {
   const __dirname = path.resolve();
-  app.use(express.static(path.join(__dirname, "/frontend/dist")));
+  const distDir = path.join(__dirname, 'frontend', 'dist');
 
-  // app.get("*", (req, res) =>
-  //   res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"))
-  // );
-  try {
-    app.get('*', (req, res) =>
-      res.sendFile(path.resolve(__dirname, 'frontend', 'dist', 'index.html'))
-    );
-  } catch (err) {
-    console.error('Wildcard route error:', err);
-  }
-} else {
-  console.log('devmode')
-  app.get("/", (req, res) => {
-    res.send("API is running....");
+  app.use(express.static(distDir));
+
+  // Optional: silence favicon 404s
+  app.get('/favicon.ico', (req, res) => res.sendStatus(204));
+
+  // Catch-all for SPA routes (Express 5 compatible)
+  app.get('/(.*)', (req, res) => {
+    res.sendFile(path.join(distDir, 'index.html'));
   });
 }
 

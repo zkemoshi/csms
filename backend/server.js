@@ -6,7 +6,6 @@ import { initializeWSS } from './websocket/ocpp_server.js';
 import cookieParser from 'cookie-parser';
 import path from 'path';
 
-
 // Importing routes
 import tokenRoutes from './routes/token.js';
 import userRoutes from './routes/users.js';
@@ -42,7 +41,6 @@ app.use('/api/stations', stationRoutes);
 app.use('/api/sessions', sessionRoutes);
 
 // --- Initialize WebSocket Server ---
-// Pass the HTTP server to the WebSocket initializer
 initializeWSS(server);
 
 // --- Production Static Files (must be after API routes) ---
@@ -55,8 +53,8 @@ if (['production', 'staging'].includes(process.env.NODE_ENV)) {
   // Optional: silence favicon 404s
   app.get('/favicon.ico', (req, res) => res.sendStatus(204));
 
-  // Catch-all for SPA routes (Express 5 compatible)
-  app.get('/(.*)', (req, res) => {
+  // ✅ Correct catch-all for SPA (use '*' or actual RegExp)
+  app.get('*', (req, res) => {
     res.sendFile(path.join(distDir, 'index.html'));
   });
 }
@@ -67,6 +65,6 @@ app.use(errorHandler);
 
 // --- Start Listening ---
 server.listen(PORT, () => {
-    console.log(`HTTP Server is running on port:${PORT}`);
-    console.log(`OCPP WebSocket Server is listening on the same port.`);
+  console.log(`HTTP Server is running on port:${PORT}`);
+  console.log(`OCPP WebSocket Server is listening on the same port.`);
 });

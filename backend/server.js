@@ -55,13 +55,13 @@ if (process.env.NODE_ENV === "production") {
   // app.get("*", (req, res) =>
   //   res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"))
   // );
-  app.get('/*', (req, res) => {
-    if (req.accepts('html')) {
-      res.sendFile(path.resolve(__dirname, 'frontend', 'dist', 'index.html'));
-    } else {
-      res.status(404).json({ message: 'API endpoint not found' });
-    }
-  });
+  try {
+    app.get('*', (req, res) =>
+      res.sendFile(path.resolve(__dirname, 'frontend', 'dist', 'index.html'))
+    );
+  } catch (err) {
+    console.error('Wildcard route error:', err);
+  }
 } else {
   console.log('devmode')
   app.get("/", (req, res) => {

@@ -4,7 +4,7 @@ import { protect, admin } from '../middleware/auth.js';
 
 const router = Router();
 
-// Protected routes
+// Protected routes - ORDER MATTERS! More specific routes first
 router.get('/', protect, ctrl.getAllSessions);
 router.get('/stats', protect, ctrl.getSessionStats);
 router.get('/active', protect, ctrl.getActiveSessions);
@@ -14,6 +14,8 @@ router.get('/date-range', protect, ctrl.getSessionsByDateRange);
 router.get('/station/:stationId', protect, ctrl.getSessionsByStation);
 router.get('/user/:idTag', protect, ctrl.getSessionsByUser);
 router.get('/session/:sessionId', protect, ctrl.getSessionBySessionId);
+
+// Generic routes - must come AFTER specific routes
 router.get('/:id', protect, ctrl.getSessionById);
 
 router.post('/', protect, ctrl.createSession);

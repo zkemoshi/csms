@@ -1,5 +1,5 @@
 {
-  "name": "ocpp-csms",
+  "name": "csms-server",
   "version": "1.0.0",
   "main": "index.js",
   "type": "module",

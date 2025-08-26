@@ -260,3 +260,4 @@ Required environment variables:
 4. Access the API at `http://localhost:8080/api`
 
 The API is now ready for charging station management! 🎯
+

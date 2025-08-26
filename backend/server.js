@@ -43,6 +43,16 @@ app.use('/api/sessions', sessionRoutes);
 // --- Initialize WebSocket Server ---
 initializeWSS(server);
 
+// --- Serve React App ---
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../frontend/dist')));
+
+  app.get('*', (req, res) => res.sendFile(path.resolve(__dirname, '../frontend/dist/index.html')));
+}else{
+  app.get('/', (req, res) => res.send('CSMS Server is running.'));
+}
+
+
 
 // Error handling middleware (must be last)
 app.use(notFound);

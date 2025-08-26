@@ -34,11 +34,32 @@ await connectDB();
 // app.get('/', (req, res) => res.send('CSMS Server is running.'));
 
 // API Routes
-app.use('/api/tokens', tokenRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/transactions', transactionRoutes);
-app.use('/api/stations', stationRoutes);
-app.use('/api/sessions', sessionRoutes);
+try {
+  app.use('/api/tokens', tokenRoutes);
+} catch (error) {
+  console.log('Error in tokenRoutes', error);
+}
+try {
+  app.use('/api/users', userRoutes);
+} catch (error) {
+  console.log('Error in userRoutes', error);
+}
+try {
+  app.use('/api/transactions', transactionRoutes);
+} catch (error) {
+  console.log('Error in transactionRoutes', error);
+}
+try {
+  app.use('/api/stations', stationRoutes);
+} catch (error) {
+  console.log('Error in stationRoutes', error);
+}
+try {
+  app.use('/api/sessions', sessionRoutes);
+} catch (error) {
+  console.log('Error in sessionRoutes', error);
+}
+
 
 // --- Initialize WebSocket Server ---
 initializeWSS(server);

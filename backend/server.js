@@ -48,8 +48,10 @@ if (process.env.NODE_ENV === 'production') {
   // ES module equivalent of __dirname using path
   const __dirname = path.dirname(new URL(import.meta.url).pathname);
   
+  // Serve React app
   app.use(express.static(path.join(__dirname, '../frontend/dist')));
 
+  // Handle React routing, return all requests to React app
   app.get('*', (req, res) => res.sendFile(path.resolve(__dirname, '../frontend/dist/index.html')));
 }else{
   app.get('/', (req, res) => res.send('CSMS Server is running.'));
